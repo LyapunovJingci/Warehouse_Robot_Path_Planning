@@ -19,6 +19,7 @@ def update():
     rewardList1 = []
     rewardList2 = []
     rewardList3 = []
+    totalRewardList = []
 
     freeze1 = False
     freeze2 = False
@@ -76,21 +77,32 @@ def update():
             
             # break while loop when end of this episode
                 
-            freeze1, freeze2, freeze3 = manageFreeze(done1, done2, done3)
-            
-            if (done1 == ('hit' or 'arrive')) and (done2 == ('hit' or 'arrive')) and (done3 == ('hit' or 'arrive')):
+            if (done1 == 'hit' or done1 == 'arrive') and (done2 == 'hit' or done2 == 'arrive') and (done3 == 'hit' or done3 == 'arrive'):
                 print (episode, 'trial: ','Robot1: ', totalReward1, '; Robot2: ', totalReward2, '; Robot3: ', totalReward3)
+                print (freeze1, freeze2, freeze3)
                 rewardList1.append(totalReward1)
                 rewardList2.append(totalReward2)
                 rewardList3.append(totalReward3)
+                totalRewardList.append(totalReward1+totalReward2+totalReward3)
                 totalReward1 = 0
                 totalReward2 = 0
                 totalReward3 = 0
+                freeze1 = False
+                freeze2 = False
+                freeze3 = False
                 break
-     
+            if done1 == 'hit' or done1 == 'arrive':
+                freeze1 = True
+            if done2 == 'hit' or done2 == 'arrive':
+                freeze2 = True
+            if done3 == 'hit' or done3 == 'arrive':
+                freeze3 = True
+
+            
     plot(rewardList1)
     plot(rewardList2)
-    plot(rewardList3)                       
+    plot(rewardList3)   
+    plot(totalRewardList)                    
     # end of game         
     print('game over')
     env.destroy()
@@ -114,24 +126,6 @@ def learn (episode, RL, action, reward, observation, observation_):
      else:
          RL.learn(str(observation), action, reward, str(observation_), 0.001, 0.9)
     
-def manageFreeze(done1, done2, done3):
-    if (done1 == ('hit' or 'arrive')) and (done2 == ('hit' or 'arrive')) and (done3 == ('hit' or 'arrive')):
-        return False, False, False
-    elif (done1 == ('hit' or 'arrive')) and (done2 == ('hit' or 'arrive')):
-        return True, True, False
-    elif (done1 == ('hit' or 'arrive')) and (done3 == ('hit' or 'arrive')):
-        return True, False, True
-    elif (done2 == ('hit' or 'arrive')) and (done3 == ('hit' or 'arrive')):
-        return False, True, True
-    elif (done1 == ('hit' or 'arrive')):
-        return True, False, False
-    elif (done2 == ('hit' or 'arrive')):
-        return False, True, False
-    elif (done3 == ('hit' or 'arrive')):
-        return False, False, True
-    else:
-        return False, False, False                 
-
 def plot (reward):
     plt.style.use('seaborn-deep')
     plt.plot(reward,linewidth= 0.3)

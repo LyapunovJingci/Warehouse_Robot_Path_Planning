@@ -25,6 +25,9 @@ X_Block = [element * UNIT for element in X_Block_pic]
 Y_Block_pic = [5,6,8,9,11,12,14,15,17,18]
 Y_Block = [element * UNIT for element in Y_Block_pic]
 
+origin1 = np.array([50, 50])
+origin2 = np.array([210,50])
+origin3 = np.array([350,50])
 
 class Maze(tk.Tk, object):
     def __init__(self):
@@ -62,7 +65,7 @@ class Maze(tk.Tk, object):
             4*UNIT,10*UNIT,5*UNIT,11*UNIT,
             fill='yellow')
         self.target2 = self.canvas.create_rectangle(
-            7*UNIT,7*UNIT,8*UNIT,8*UNIT,
+            7*UNIT,13*UNIT,8*UNIT,14*UNIT,
             fill='turquoise')
         self.target3 = self.canvas.create_rectangle(
             12*UNIT,10*UNIT,13*UNIT,11*UNIT,
@@ -70,19 +73,16 @@ class Maze(tk.Tk, object):
             
 
         #create robot1
-        origin1 = np.array([50, 50])
         self.rect1 = self.canvas.create_rectangle(
             origin1[0] - 10, origin1[1] - 10,
             origin1[0] + 10, origin1[1] + 10,
             fill='red')
         #create robot2
-        origin2 = np.array([210,50])
         self.rect2 = self.canvas.create_rectangle(
             origin2[0] - 10, origin2[1] - 10,
             origin2[0] + 10, origin2[1] + 10,
             fill='salmon')
         #create robot3
-        origin3 = np.array([350,50])
         self.rect3 = self.canvas.create_rectangle(
             origin3[0] - 10, origin3[1] - 10,
             origin3[0] + 10, origin3[1] + 10,
@@ -92,21 +92,18 @@ class Maze(tk.Tk, object):
 
     def resetRobot(self):
         self.update()
-        time.sleep(0.001)
+        time.sleep(0.01)
         self.canvas.delete(self.rect1)
         self.canvas.delete(self.rect2)
         self.canvas.delete(self.rect3)
-        origin1 = np.array([50, 50])
         self.rect1 = self.canvas.create_rectangle(
             origin1[0] - 10, origin1[1] - 10,
             origin1[0] + 10, origin1[1] + 10,
             fill='red')
-        origin2 = np.array([210,50])
         self.rect2 = self.canvas.create_rectangle(
             origin2[0] - 10, origin2[1] - 10,
             origin2[0] + 10, origin2[1] + 10,
             fill='salmon')   
-        origin3 = np.array([350,50])
         self.rect3 = self.canvas.create_rectangle(
             origin3[0] - 10, origin3[1] - 10,
             origin3[0] + 10, origin3[1] + 10,
@@ -134,10 +131,9 @@ class Maze(tk.Tk, object):
         self.canvas.move(self.rect1, base_action[0], base_action[1])  # move agent
         s_ = self.canvas.coords(self.rect1)  # next state
       
-        # reward function
-        
+        # reward function        
         if s_ == self.canvas.coords(self.target1):
-            reward = 500
+            reward = 50
             done = 'arrive'
             s_ = 'terminal'
         elif s_[0] == 0 or s_[1] < 40 or s_[2] >= MAZE_H * UNIT or s_[3] >= MAZE_W * UNIT:
@@ -174,10 +170,9 @@ class Maze(tk.Tk, object):
         self.canvas.move(self.rect2, base_action[0], base_action[1])  # move agent
         s_ = self.canvas.coords(self.rect2)  # next state
       
-        # reward function
-        
+        # reward function      
         if s_ == self.canvas.coords(self.target2):
-            reward = 500
+            reward = 50
             done = 'arrive'
             s_ = 'terminal'
         elif s_[0] == 0 or s_[1] < 40 or s_[2] >= MAZE_H * UNIT or s_[3] >= MAZE_W * UNIT:
@@ -217,7 +212,7 @@ class Maze(tk.Tk, object):
         # reward function
         
         if s_ == self.canvas.coords(self.target3):
-            reward = 500
+            reward = 50
             done = 'arrive'
             s_ = 'terminal'
         elif s_[0] == 0 or s_[1] < 40 or s_[2] >= MAZE_H * UNIT or s_[3] >= MAZE_W * UNIT:
@@ -235,7 +230,7 @@ class Maze(tk.Tk, object):
         return s_, reward, done
 
     def render(self):
-        time.sleep(0.001)
+        time.sleep(0.01)
         self.update()
 '''
 def update():
