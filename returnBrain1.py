@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Mon Mar 30 19:57:20 2020
+Created on Fri Apr 10 12:33:57 2020
 
 @author: jingci
 """
@@ -10,13 +10,13 @@ import numpy as np
 import pandas as pd
 import pickle
 
-class QLearningTable1:
+class ReturnQLearningTable1:
     def __init__(self, actions, learning_rate=0.2, reward_decay=0.9, e_greedy=0.8):
         self.actions = actions  # a list
         self.lr = learning_rate
         self.gamma = reward_decay
         self.epsilon = e_greedy
-        f = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/q_table1.txt', 'rb')
+        f = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/Return_q_table1.txt', 'rb')
         #self.q_table = pd.DataFrame(columns=self.actions, dtype=np.float64)
         self.q_table = pickle.load(f)
         f.close()
@@ -54,3 +54,5 @@ class QLearningTable1:
                     name=state,
                 )
             )
+
+

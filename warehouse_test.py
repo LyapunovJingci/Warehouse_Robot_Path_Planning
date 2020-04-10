@@ -10,6 +10,9 @@ from new_small_maze import Maze
 from RL_brain_Robo1 import QLearningTable1
 from RL_brain_Robo2 import QLearningTable2
 from RL_brain_Robo3 import QLearningTable3
+from returnBrain1 import ReturnQLearningTable1
+from returnBrain2 import ReturnQLearningTable2
+from returnBrain3 import ReturnQLearningTable3
 import matplotlib.pyplot as plt
 import pickle
 
@@ -25,7 +28,7 @@ def update():
     freeze1 = False
     freeze2 = False
     freeze3 = False
-    for episode in range(3000):
+    for episode in range(200):
         # initial observation
         observation1, observation2, observation3 = env.resetRobot()
         
@@ -88,6 +91,17 @@ def update():
                 totalReward1 = 0
                 totalReward2 = 0
                 totalReward3 = 0
+                if done1 == 'arrive' and done2 == 'arrive' and done3 == 'arrive':
+                    for i in range(50):
+                        if startReturnTable (episode, observation1, ReturnRL1,1) == 'arrive':
+                            break
+                    for i in range(50): 
+                        if startReturnTable (episode, observation2, ReturnRL2,2) == 'arrive':
+                            break
+                    for i in range(50): 
+                        if startReturnTable (episode, observation3, ReturnRL3,3) == 'arrive': 
+                            break
+            
                 freeze1 = False
                 freeze2 = False
                 freeze3 = False
@@ -98,26 +112,20 @@ def update():
                 freeze2 = True
             if done3 == 'hit' or done3 == 'arrive':
                 freeze3 = True
-        
+       
+        # Train the map and dump into pickle
+        '''
         if episode == 2500:     
-            f1 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/q_table1.txt', 'wb')
+            f1 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/Return_q_table1.txt', 'wb')
             pickle.dump(RL1.q_table,f1)
             f1.close()
-            f2 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/q_table2.txt', 'wb')
+            f2 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/Return_table2.txt', 'wb')
             pickle.dump(RL2.q_table,f2)
             f2.close()
-            f3 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/q_table3.txt', 'wb')
+            f3 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/Return_table3.txt', 'wb')
             pickle.dump(RL3.q_table,f3)
             f3.close()
-        
-            '''
-            with open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/q_table1.csv', 'wt') as f1:
-                print (RL1.q_table, file=f1)    
-            with open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/q_table2.csv', 'wt') as f2:
-                print (RL2.q_table, file=f2)  
-            with open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/q_table3.csv', 'wt') as f3:
-                print (RL3.q_table, file=f3)
-            '''
+        '''
     plot(rewardList1)
     plot(rewardList2)
     plot(rewardList3)   
@@ -127,29 +135,41 @@ def update():
     env.destroy()
     #print(rewardList)
     
- 
-    
+def startReturnTable (episode, observation, RL, robotNumber):
+    #observation1, observation2, observation3 = env.resetRobot()
+    while True:
+        env.render()
+        action = chooseNoRandomAction(RL, observation)
+        if robotNumber == 1:
+            observation_, reward, done = env.returnStep1(action)
+        elif robotNumber == 2:
+            observation_, reward, done = env.returnStep2(action)
+        elif robotNumber == 3:
+            observation_, reward, done = env.returnStep3(action)
+        learn (episode, RL, action, reward, observation, observation_)
+        observation = observation_
+        #print (done)
+        if done == 'arrive' or done == 'hit':
+            break
+    return done
+
+def chooseNoRandomAction(RL, observation):
+    return RL.choose_action(str(observation),1)
+      
 def chooseAction (episode, RL, observation):
-    if episode < 200:
-        return RL.choose_action(str(observation), 0.8+episode*0.01)
+    if episode < 100:
+        return RL.choose_action(str(observation), 0.9 + episode * 0.001)
     else:
         return RL.choose_action(str(observation),1)
-    '''
-    if episode < 1000:
-        return RL.choose_action(str(observation),0.0009*episode)
-    elif episode < 2500 and episode >= 1000:
-        return RL.choose_action(str(observation),0.9+(episode-1000)*0.00006)
-    else:
-        return RL.choose_action(str(observation),1)
-    '''
+
 def learn (episode, RL, action, reward, observation, observation_):
      if episode < 500:
-         RL.learn(str(observation), action, reward, str(observation_), 0.3, 0.9)
+         RL.learn(str(observation), action, reward, str(observation_), 0.03, 0.9)
      elif episode < 1500 and episode >= 500:
          RL.learn(str(observation), action, reward, str(observation_), 0.3-0.0002*(episode-500), 0.9)
      else:
          RL.learn(str(observation), action, reward, str(observation_), 0.001, 0.9)
-    
+ 
 def plot (reward):
     plt.style.use('seaborn-deep')
     plt.plot(reward,linewidth= 0.3)
@@ -163,5 +183,8 @@ if __name__ == "__main__":
     RL1 = QLearningTable1(actions=list(range(env.n_actions)))
     RL2 = QLearningTable2(actions=list(range(env.n_actions)))
     RL3 = QLearningTable3(actions=list(range(env.n_actions)))
+    ReturnRL1 = ReturnQLearningTable1(actions=list(range(env.n_actions)))
+    ReturnRL2 = ReturnQLearningTable2(actions=list(range(env.n_actions)))
+    ReturnRL3 = ReturnQLearningTable3(actions=list(range(env.n_actions)))
     env.after(3000, update)
     env.mainloop()
