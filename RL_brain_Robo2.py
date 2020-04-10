@@ -8,7 +8,7 @@ Created on Tue Mar 31 21:22:27 2020
 
 import numpy as np
 import pandas as pd
-
+import pickle
 
 class QLearningTable2:
     def __init__(self, actions, learning_rate=0.2, reward_decay=0.9, e_greedy=0.8):
@@ -16,7 +16,10 @@ class QLearningTable2:
         self.lr = learning_rate
         self.gamma = reward_decay
         self.epsilon = e_greedy
-        self.q_table = pd.DataFrame(columns=self.actions, dtype=np.float64)
+        f = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/q_table2.txt', 'rb')
+        #self.q_table = pd.DataFrame(columns=self.actions, dtype=np.float64)
+        self.q_table = pickle.load(f)
+        f.close()
 
     def choose_action(self, observation, epsilon):
         self.check_state_exist(observation)

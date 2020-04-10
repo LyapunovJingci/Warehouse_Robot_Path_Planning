@@ -34,7 +34,7 @@ class Maze(tk.Tk, object):
         super(Maze, self).__init__()
         self.action_space = ['u', 'd', 'l', 'r','w']
         self.n_actions = len(self.action_space)
-        self.title('maze')
+        self.title('Warehouse')
         self.geometry('{0}x{1}'.format(MAZE_H * UNIT, MAZE_H * UNIT))
         self._build_maze()
 
@@ -61,6 +61,7 @@ class Maze(tk.Tk, object):
                 self.canvas.create_rectangle(k*UNIT, i*UNIT, (k+4)*UNIT,(i+2)*UNIT,fill='gray')
 
         # create target
+        
         self.target1 = self.canvas.create_rectangle(
             4*UNIT,10*UNIT,5*UNIT,11*UNIT,
             fill='yellow')
@@ -70,7 +71,7 @@ class Maze(tk.Tk, object):
         self.target3 = self.canvas.create_rectangle(
             12*UNIT,10*UNIT,13*UNIT,11*UNIT,
             fill='tan')
-            
+          
 
         #create robot1
         self.rect1 = self.canvas.create_rectangle(
@@ -131,11 +132,12 @@ class Maze(tk.Tk, object):
         self.canvas.move(self.rect1, base_action[0], base_action[1])  # move agent
         s_ = self.canvas.coords(self.rect1)  # next state
       
-        # reward function        
+        # reward function 
+        
         if s_ == self.canvas.coords(self.target1):
             reward = 50
             done = 'arrive'
-            s_ = 'terminal'
+            s_ = 'terminal'   
         elif s_[0] == 0 or s_[1] < 40 or s_[2] >= MAZE_H * UNIT or s_[3] >= MAZE_W * UNIT:
             reward = -50
             done = 'hit'
@@ -171,6 +173,7 @@ class Maze(tk.Tk, object):
         s_ = self.canvas.coords(self.rect2)  # next state
       
         # reward function      
+
         if s_ == self.canvas.coords(self.target2):
             reward = 50
             done = 'arrive'
@@ -210,7 +213,7 @@ class Maze(tk.Tk, object):
         s_ = self.canvas.coords(self.rect3)  # next state
       
         # reward function
-        
+
         if s_ == self.canvas.coords(self.target3):
             reward = 50
             done = 'arrive'
@@ -232,7 +235,7 @@ class Maze(tk.Tk, object):
     def render(self):
         time.sleep(0.01)
         self.update()
-'''
+
 def update():
     for t in range(10):
         s1, s2 = env.resetRobot()
@@ -250,7 +253,7 @@ def update():
                 break
             elif s1 == s2:
                 break
-'''
+
 if __name__ == '__main__':
     env = Maze()
     env.after(2000, update)

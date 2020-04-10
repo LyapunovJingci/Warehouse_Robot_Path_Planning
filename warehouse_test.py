@@ -11,6 +11,7 @@ from RL_brain_Robo1 import QLearningTable1
 from RL_brain_Robo2 import QLearningTable2
 from RL_brain_Robo3 import QLearningTable3
 import matplotlib.pyplot as plt
+import pickle
 
 def update():
     totalReward1 = 0
@@ -79,7 +80,7 @@ def update():
                 
             if (done1 == 'hit' or done1 == 'arrive') and (done2 == 'hit' or done2 == 'arrive') and (done3 == 'hit' or done3 == 'arrive'):
                 print (episode, 'trial: ','Robot1: ', totalReward1, '; Robot2: ', totalReward2, '; Robot3: ', totalReward3)
-                print (freeze1, freeze2, freeze3)
+                #print (freeze1, freeze2, freeze3)
                 rewardList1.append(totalReward1)
                 rewardList2.append(totalReward2)
                 rewardList3.append(totalReward3)
@@ -97,8 +98,26 @@ def update():
                 freeze2 = True
             if done3 == 'hit' or done3 == 'arrive':
                 freeze3 = True
-
-            
+        
+        if episode == 2500:     
+            f1 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/q_table1.txt', 'wb')
+            pickle.dump(RL1.q_table,f1)
+            f1.close()
+            f2 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/q_table2.txt', 'wb')
+            pickle.dump(RL2.q_table,f2)
+            f2.close()
+            f3 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/q_table3.txt', 'wb')
+            pickle.dump(RL3.q_table,f3)
+            f3.close()
+        
+            '''
+            with open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/q_table1.csv', 'wt') as f1:
+                print (RL1.q_table, file=f1)    
+            with open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/q_table2.csv', 'wt') as f2:
+                print (RL2.q_table, file=f2)  
+            with open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/q_table3.csv', 'wt') as f3:
+                print (RL3.q_table, file=f3)
+            '''
     plot(rewardList1)
     plot(rewardList2)
     plot(rewardList3)   
@@ -111,13 +130,18 @@ def update():
  
     
 def chooseAction (episode, RL, observation):
+    if episode < 200:
+        return RL.choose_action(str(observation), 0.8+episode*0.01)
+    else:
+        return RL.choose_action(str(observation),1)
+    '''
     if episode < 1000:
         return RL.choose_action(str(observation),0.0009*episode)
     elif episode < 2500 and episode >= 1000:
         return RL.choose_action(str(observation),0.9+(episode-1000)*0.00006)
     else:
         return RL.choose_action(str(observation),1)
-
+    '''
 def learn (episode, RL, action, reward, observation, observation_):
      if episode < 500:
          RL.learn(str(observation), action, reward, str(observation_), 0.3, 0.9)
