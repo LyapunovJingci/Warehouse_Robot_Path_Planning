@@ -60,16 +60,19 @@ class Maze(tk.Tk, object):
         for k in range (1,17,5):
             for i in range (5,18,3):
                 self.canvas.create_rectangle(k*UNIT, i*UNIT, (k+4)*UNIT,(i+2)*UNIT,fill='bisque4')
-
+        # create human being
+        self.human1 = self.canvas.create_rectangle(7*UNIT, 0, 8*UNIT, 1*UNIT, fill='green') 
+        self.human2 = self.canvas.create_rectangle(13*UNIT, 0, 14*UNIT, 1*UNIT, fill='green') 
+        
         # create targets        
         self.target1 = self.canvas.create_rectangle(
-            7*UNIT,13*UNIT,8*UNIT,14*UNIT,
+            9*UNIT,10*UNIT,10*UNIT,11*UNIT,
             fill='light salmon')
         self.target2 = self.canvas.create_rectangle(
-            11*UNIT,10*UNIT,12*UNIT,11*UNIT,
+            6*UNIT,10*UNIT,7*UNIT,11*UNIT,
             fill='tomato')
         self.target3 = self.canvas.create_rectangle(
-            17*UNIT,10*UNIT,18*UNIT,11*UNIT,
+            18*UNIT,10*UNIT,19*UNIT,11*UNIT,
             fill='orangered')
         
         # define starting points       
@@ -120,7 +123,59 @@ class Maze(tk.Tk, object):
             origin3[0] + 10, origin3[1] + 10,
             fill='RoyalBlue1' )
         return self.canvas.coords(self.rect1), self.canvas.coords(self.rect2), self.canvas.coords(self.rect3)
-   
+    
+    def resetHuman(self):
+        self.update()
+        time.sleep(0.01)
+        self.canvas.delete(self.human1)
+        self.canvas.delete(self.human2)
+        self.human1 = self.canvas.create_rectangle(7*UNIT, 0, 8*UNIT, 1*UNIT, fill='green') 
+        self.human2 = self.canvas.create_rectangle(13*UNIT, 0, 14*UNIT, 1*UNIT, fill='green') 
+        return self.canvas.coords(self.human1), self.canvas.coords(self.human2)
+    
+    def humanStep1(self, action): 
+        s = self.canvas.coords(self.human1)
+        base_action = np.array([0, 0])
+        if action == 0:   # up
+            if s[1] > UNIT:
+                base_action[1] -= UNIT
+        elif action == 1:   # down
+            if s[1] < (MAZE_H - 1) * UNIT:
+                base_action[1] += UNIT
+        elif action == 2:   # right
+            if s[0] < (MAZE_W - 1) * UNIT:
+                base_action[0] += UNIT
+        elif action == 3:   # left
+            if s[0] > UNIT:
+                base_action[0] -= UNIT
+        elif action == 4:   # wait
+            base_action = np.array([0, 0])
+        self.canvas.move(self.human1, base_action[0], base_action[1])  # move agent
+        s_ = self.canvas.coords(self.human1)  # next state
+        return s_
+    
+    def humanStep2(self, action): 
+        s = self.canvas.coords(self.human2)
+        base_action = np.array([0, 0])
+        if action == 0:   # up
+            if s[1] > UNIT:
+                base_action[1] -= UNIT
+        elif action == 1:   # down
+            if s[1] < (MAZE_H - 1) * UNIT:
+                base_action[1] += UNIT
+        elif action == 2:   # right
+            if s[0] < (MAZE_W - 1) * UNIT:
+                base_action[0] += UNIT
+        elif action == 3:   # left
+            if s[0] > UNIT:
+                base_action[0] -= UNIT
+        elif action == 4:   # wait
+            base_action = np.array([0, 0])
+        self.canvas.move(self.human2, base_action[0], base_action[1])  # move agent
+        s_ = self.canvas.coords(self.human2)  # next state
+        return s_
+    
+    
     def returnStep1(self, action): 
         s = self.canvas.coords(self.rect1)
         base_action = np.array([0, 0])
