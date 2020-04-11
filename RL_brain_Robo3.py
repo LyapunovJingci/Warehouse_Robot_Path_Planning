@@ -17,8 +17,9 @@ class QLearningTable3:
         self.lr = learning_rate
         self.gamma = reward_decay
         self.epsilon = e_greedy
-        f = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/q_table3.txt', 'rb')
+        #f = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/q_table3.txt', 'rb')
         #self.q_table = pd.DataFrame(columns=self.actions, dtype=np.float64)
+        f = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/path_qtable3.txt', 'rb')
         self.q_table = pickle.load(f)
         f.close()
 

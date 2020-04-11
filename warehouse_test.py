@@ -139,7 +139,7 @@ def update():
             pickle.dump(RL3.q_table,f3)
             f3.close()
         '''
-    
+    '''
     f1 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/Return_qtable1.txt', 'wb')
     pickle.dump(ReturnRL1.q_table,f1)
     f1.close()
@@ -150,15 +150,15 @@ def update():
     pickle.dump(ReturnRL3.q_table,f3)
     f3.close()
     f4 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/path_qtable1.txt', 'wb')
-    pickle.dump(RL1.q_table,f1)
+    pickle.dump(RL1.q_table,f4)
     f4.close()
     f5 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/path_qtable2.txt', 'wb')
-    pickle.dump(RL2.q_table,f2)
+    pickle.dump(RL2.q_table,f5)
     f5.close()
     f6 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/path_qtable3.txt', 'wb')
-    pickle.dump(RL3.q_table,f3)
+    pickle.dump(RL3.q_table,f6)
     f6.close()
-    
+    '''
     plot(rewardList1)
     plot(rewardList2)
     plot(rewardList3)   

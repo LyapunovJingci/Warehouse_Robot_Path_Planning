@@ -66,13 +66,13 @@ class Maze(tk.Tk, object):
         
         # create targets        
         self.target1 = self.canvas.create_rectangle(
-            9*UNIT,10*UNIT,10*UNIT,11*UNIT,
+            19*UNIT,10*UNIT,20*UNIT,11*UNIT,
             fill='light salmon')
         self.target2 = self.canvas.create_rectangle(
-            6*UNIT,10*UNIT,7*UNIT,11*UNIT,
+            2*UNIT,10*UNIT,3*UNIT,11*UNIT,
             fill='tomato')
         self.target3 = self.canvas.create_rectangle(
-            18*UNIT,10*UNIT,19*UNIT,11*UNIT,
+            8*UNIT,10*UNIT,9*UNIT,11*UNIT,
             fill='orangered')
         
         # define starting points       
@@ -202,6 +202,14 @@ class Maze(tk.Tk, object):
             reward = 50
             done = 'arrive'
             s_ = 'terminal'   
+        elif s_ == self.canvas.coords(self.target2) or s_ == self.canvas.coords(self.target3):
+            reward = -50
+            done = 'hit'
+            s_ = 'terminal'
+        elif s_ == self.canvas.coords(self.org2) or s_ == self.canvas.coords(self.org3):
+            reward = -50
+            done = 'hit'
+            s_ = 'terminal'
         elif s_[0] == 0 or s_[1] < 40 or s_[2] >= MAZE_H * UNIT or s_[3] >= MAZE_W * UNIT:
             reward = -50
             done = 'hit'
@@ -242,6 +250,14 @@ class Maze(tk.Tk, object):
             reward = 50
             done = 'arrive'
             s_ = 'terminal'   
+        elif s_ == self.canvas.coords(self.target1) or s_ == self.canvas.coords(self.target3):
+            reward = -50
+            done = 'hit'
+            s_ = 'terminal'
+        elif s_ == self.canvas.coords(self.org1) or s_ == self.canvas.coords(self.org3):
+            reward = -50
+            done = 'hit'
+            s_ = 'terminal'
         elif s_[0] == 0 or s_[1] < 40 or s_[2] >= MAZE_H * UNIT or s_[3] >= MAZE_W * UNIT:
             reward = -50
             done = 'hit'
@@ -282,6 +298,14 @@ class Maze(tk.Tk, object):
             reward = 50
             done = 'arrive'
             s_ = 'terminal'   
+        elif s_ == self.canvas.coords(self.target1) or s_ == self.canvas.coords(self.target2):
+            reward = -50
+            done = 'hit'
+            s_ = 'terminal'
+        elif s_ == self.canvas.coords(self.org1) or s_ == self.canvas.coords(self.org2):
+            reward = -50
+            done = 'hit'
+            s_ = 'terminal'
         elif s_[0] == 0 or s_[1] < 40 or s_[2] >= MAZE_H * UNIT or s_[3] >= MAZE_W * UNIT:
             reward = -50
             done = 'hit'
@@ -324,6 +348,10 @@ class Maze(tk.Tk, object):
             reward = 50
             done = 'arrive'
             s_ = 'terminal'   
+        elif s_ == self.canvas.coords(self.target2) or s_ == self.canvas.coords(self.target3):
+            reward = -50
+            done = 'hit'
+            s_ = 'terminal'
         elif s_[0] == 0 or s_[1] < 40 or s_[2] >= MAZE_H * UNIT or s_[3] >= MAZE_W * UNIT:
             reward = -50
             done = 'hit'
@@ -364,6 +392,10 @@ class Maze(tk.Tk, object):
             reward = 50
             done = 'arrive'
             s_ = 'terminal'
+        elif s_ == self.canvas.coords(self.target1) or s_ == self.canvas.coords(self.target3):
+            reward = -50
+            done = 'hit'
+            s_ = 'terminal'
         elif s_[0] == 0 or s_[1] < 40 or s_[2] >= MAZE_H * UNIT or s_[3] >= MAZE_W * UNIT:
             reward = -50
             done = 'hit'
@@ -403,6 +435,10 @@ class Maze(tk.Tk, object):
         if s_ == self.canvas.coords(self.target3):
             reward = 50
             done = 'arrive'
+            s_ = 'terminal'
+        elif s_ == self.canvas.coords(self.target1) or s_ == self.canvas.coords(self.target2):
+            reward = -50
+            done = 'hit'
             s_ = 'terminal'
         elif s_[0] == 0 or s_[1] < 40 or s_[2] >= MAZE_H * UNIT or s_[3] >= MAZE_W * UNIT:
             reward = -50
