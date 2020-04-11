@@ -15,6 +15,8 @@ from returnBrain2 import ReturnQLearningTable2
 from returnBrain3 import ReturnQLearningTable3
 import matplotlib.pyplot as plt
 import pickle
+HUMANWALK1 = [1,1,1,1,3,3,1,1,1,2,2,2,2,2,1,1,1,2,2,2,2,2,1,1,1,1,1,1,2,2,2,2,2]
+UNIT = 20
 
 def update():
     totalReward1 = 0
@@ -28,14 +30,25 @@ def update():
     freeze1 = False
     freeze2 = False
     freeze3 = False
-    for episode in range(200):
+    for episode in range(300):
         # initial observation
         observation1, observation2, observation3 = env.resetRobot()
-        
+        nearbyEnvironment(observation1)
+        #human1, human2 = env.resetHuman()
+        #humanWalkHelper = 0
         while True:
             # fresh env
             env.render()
-            
+            '''
+            if humanWalkHelper % 2 == 0:
+                if humanWalkHelper/2 < len(HUMANWALK1):
+                    env.humanStep1(HUMANWALK1[int(humanWalkHelper/2)])
+                else:
+                    env.humanStep1(4)
+            else:
+                env.humanStep1(4)
+            humanWalkHelper +=1
+            '''
             # RL choose action based on observation
             if freeze1:
                 action1 = 4
@@ -101,7 +114,7 @@ def update():
                     for i in range(50): 
                         if startReturnTable (episode, observation3, ReturnRL3,3) == 'arrive': 
                             break
-            
+
                 freeze1 = False
                 freeze2 = False
                 freeze3 = False
@@ -126,6 +139,26 @@ def update():
             pickle.dump(RL3.q_table,f3)
             f3.close()
         '''
+    
+    f1 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/Return_qtable1.txt', 'wb')
+    pickle.dump(ReturnRL1.q_table,f1)
+    f1.close()
+    f2 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/Return_qtable2.txt', 'wb')
+    pickle.dump(ReturnRL2.q_table,f2)
+    f2.close()
+    f3 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/Return_qtable3.txt', 'wb')
+    pickle.dump(ReturnRL3.q_table,f3)
+    f3.close()
+    f4 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/path_qtable1.txt', 'wb')
+    pickle.dump(RL1.q_table,f1)
+    f4.close()
+    f5 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/path_qtable2.txt', 'wb')
+    pickle.dump(RL2.q_table,f2)
+    f5.close()
+    f6 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/path_qtable3.txt', 'wb')
+    pickle.dump(RL3.q_table,f3)
+    f6.close()
+    
     plot(rewardList1)
     plot(rewardList2)
     plot(rewardList3)   
@@ -157,7 +190,7 @@ def chooseNoRandomAction(RL, observation):
     return RL.choose_action(str(observation),1)
       
 def chooseAction (episode, RL, observation):
-    if episode < 100:
+    if episode < -1:
         return RL.choose_action(str(observation), 0.9 + episode * 0.001)
     else:
         return RL.choose_action(str(observation),1)
@@ -170,13 +203,25 @@ def learn (episode, RL, action, reward, observation, observation_):
      else:
          RL.learn(str(observation), action, reward, str(observation_), 0.001, 0.9)
  
-def plot (reward):
+def plot(reward):
     plt.style.use('seaborn-deep')
     plt.plot(reward,linewidth= 0.3)
     plt.title('Q Learning Total Reward')
     plt.xlabel('Trial')
     plt.ylabel('Reward')
     plt.show() 
+
+def nearbyEnvironment(coordinate):
+    left = [coordinate[0]-UNIT, coordinate[1], coordinate[2]-UNIT, coordinate[3]]
+    right = [coordinate[0]+UNIT, coordinate[1], coordinate[2]+UNIT, coordinate[3]]
+    up = [coordinate[0], coordinate[1]-UNIT, coordinate[2], coordinate[3]-UNIT]
+    down = [coordinate[0], coordinate[1]+UNIT, coordinate[2], coordinate[3]+UNIT]
+    upleft = [coordinate[0]-UNIT, coordinate[1]-UNIT, coordinate[2]-UNIT, coordinate[3]-UNIT]
+    upright = [coordinate[0]+UNIT, coordinate[1]-UNIT, coordinate[2]+UNIT, coordinate[3]-UNIT]
+    downleft = [coordinate[0]-UNIT, coordinate[1]+UNIT, coordinate[2]-UNIT, coordinate[3]+UNIT]
+    downright = [coordinate[0]+UNIT, coordinate[1]+UNIT, coordinate[2]+UNIT, coordinate[3]+UNIT]
+    nearby = [upleft, up, upright, left, right, downleft, down, downright]
+    return nearby
     
 if __name__ == "__main__":
     env = Maze()
