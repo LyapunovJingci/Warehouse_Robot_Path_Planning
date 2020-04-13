@@ -15,8 +15,14 @@ from returnBrain2 import ReturnQLearningTable2
 from returnBrain3 import ReturnQLearningTable3
 import matplotlib.pyplot as plt
 import pickle
-HUMANWALK1 = [1,1,1,1,3,3,1,1,1,2,2,2,2,2,1,1,1,2,2,2,2,2,1,1,1,1,1,1,2,2,2,2,2]
+#HUMANWALK1 = [2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+HUMANWALK1 = [4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4]
 UNIT = 20
+STATE0 = "RAW"
+STATE1 = "MAP"
+STATE2 = "PATH"
+CHOSENSTATE = STATE2
+RECORDDATA = False
 
 def update():
     totalReward1 = 0
@@ -33,29 +39,32 @@ def update():
     for episode in range(300):
         # initial observation
         observation1, observation2, observation3 = env.resetRobot()
-        nearbyEnvironment(observation1)
-        #human1, human2 = env.resetHuman()
-        #humanWalkHelper = 0
+        #nearbyEnvironment(observation1)
+        human1, human2 = env.resetHuman()
+        humanWalkHelper = 0
+        wait_time = 0
         while True:
             # fresh env
             env.render()
-            '''
+            
             if humanWalkHelper % 2 == 0:
                 if humanWalkHelper/2 < len(HUMANWALK1):
-                    env.humanStep1(HUMANWALK1[int(humanWalkHelper/2)])
+                    human1 = env.humanStep1(HUMANWALK1[int(humanWalkHelper/2)])
                 else:
-                    env.humanStep1(4)
+                    human1 = env.humanStep1(4)
             else:
-                env.humanStep1(4)
+                human1 = env.humanStep1(4)
             humanWalkHelper +=1
-            '''
+
             # RL choose action based on observation
             if freeze1:
                 action1 = 4
             else:
                 # Choose action
                 action1 = chooseAction(episode, RL1, observation1)   
-                # RL take action and get next observation and reward                
+                # RL take action and get next observation and reward
+                #directEnvironment = directNearbyEnvironment(observation1)
+                
                 observation1_, reward1, done1 = env.step1(action1)
                 totalReward1+=reward1
                 # RL learn from this transition
@@ -69,21 +78,80 @@ def update():
             else:                
                 # Choose action
                 action2 = chooseAction(episode, RL2, observation2)        
-                # RL take action and get next observation and reward                
-                observation2_, reward2, done2 = env.step2(action2)
+                # RL take action and get next observation and reward
+                #------------------------------------
+                
+                directEnvironment2 = directNearbyEnvironment(observation2)
+                if human1 in directEnvironment2:
+                    print('进这儿')
+                    if human1 == directEnvironment2[0] and action2 == 0:
+                        observation2_, reward2, done1 = env.step2(1)
+                    elif human1 == directEnvironment2[1] and action2 == 1:
+                        if wait_time > 5:
+                            observation2_, reward2, done2 = env.step2(4)
+                        else:
+                            observation2_, reward2, done2 = env.step2(4)
+                            wait_time +=1
+                    elif human1 == directEnvironment2[2] and action2 == 3:
+                        observation2_, reward2, done2 = env.step2(2)
+                    elif human1 == directEnvironment2[3] and action2 == 2:
+                        observation2_, reward2, done2 = env.step2(3)
+                else:
+                    observation2_, reward2, done2 = env.step2(action2)
+                
+
+                #------------------------------------   
+                
+                #observation2_, reward2, done2 = env.step2(action2)
                 totalReward2+=reward2
                 # RL learn from this transition
                 learn (episode, RL2, action2, reward2, observation2, observation2_)
 
                 # swap observation
                 observation2 = observation2_
-            
+                
             if freeze3:
                 action3 = 4
             else:
                 # Choose action
                 action3 = chooseAction(episode, RL3, observation3) 
                 # RL take action and get next observation and reward         
+                #---------------------------------------------
+                '''
+                directEnvironment = directNearbyEnvironment(observation3)
+                if observation1 in directEnvironment or observation2 in directEnvironment:
+                    print("进来了")
+                    if observation2 == directEnvironment[0] or observation1 == directEnvironment[0]:
+                        if action3 == 0:
+                            observation3_, reward3, done3 = env.step3(1)
+                        else:
+                            observation3_, reward3, done3 = env.step3(action3)
+                    elif observation2 == directEnvironment[1] or observation1 == directEnvironment[1]:
+                        if action3 == 1:
+                            observation3_, reward3, done3 = env.step3(0)
+                        else:
+                            observation3_, reward3, done3 = env.step3(action3)
+                    elif observation2 == directEnvironment[2] or observation1 == directEnvironment[2]:
+                        print("又进来了")
+                        print(action3)
+                        if action3 == 3:
+                            observation3_, reward3, done3 = env.step3(4)
+                        else:
+                            observation3_, reward3, done3 = env.step3(action3)
+                    elif observation2 == directEnvironment[3] or observation1 == directEnvironment[3]:
+                        print("又进来了")
+                        print(action1)
+                        if action3 == 2:
+                            observation3_, reward3, done3 = env.step3(4)
+                        else:
+                            observation3_, reward3, done3 = env.step3(action3)
+                else:
+                    observation3_, reward3, done3 = env.step3(action3)
+                
+                
+                
+                '''
+                #---------------------------------------------
                 observation3_, reward3, done3 = env.step3(action3)
                 totalReward3+=reward3
                 # RL learn from this transition
@@ -139,26 +207,26 @@ def update():
             pickle.dump(RL3.q_table,f3)
             f3.close()
         '''
-    '''
-    f1 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/Return_qtable1.txt', 'wb')
-    pickle.dump(ReturnRL1.q_table,f1)
-    f1.close()
-    f2 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/Return_qtable2.txt', 'wb')
-    pickle.dump(ReturnRL2.q_table,f2)
-    f2.close()
-    f3 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/Return_qtable3.txt', 'wb')
-    pickle.dump(ReturnRL3.q_table,f3)
-    f3.close()
-    f4 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/path_qtable1.txt', 'wb')
-    pickle.dump(RL1.q_table,f4)
-    f4.close()
-    f5 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/path_qtable2.txt', 'wb')
-    pickle.dump(RL2.q_table,f5)
-    f5.close()
-    f6 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/path_qtable3.txt', 'wb')
-    pickle.dump(RL3.q_table,f6)
-    f6.close()
-    '''
+    if RECORDDATA:
+        f1 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/Return_qtable1.txt', 'wb')
+        pickle.dump(ReturnRL1.q_table,f1)
+        f1.close()
+        f2 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/Return_qtable2.txt', 'wb')
+        pickle.dump(ReturnRL2.q_table,f2)
+        f2.close()
+        f3 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/Return_qtable3.txt', 'wb')
+        pickle.dump(ReturnRL3.q_table,f3)
+        f3.close()
+        f4 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/path_qtable1.txt', 'wb')
+        pickle.dump(RL1.q_table,f4)
+        f4.close()
+        f5 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/path_qtable2.txt', 'wb')
+        pickle.dump(RL2.q_table,f5)
+        f5.close()
+        f6 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/path_qtable3.txt', 'wb')
+        pickle.dump(RL3.q_table,f6)
+        f6.close()
+
     plot(rewardList1)
     plot(rewardList2)
     plot(rewardList3)   
@@ -222,14 +290,25 @@ def nearbyEnvironment(coordinate):
     downright = [coordinate[0]+UNIT, coordinate[1]+UNIT, coordinate[2]+UNIT, coordinate[3]+UNIT]
     nearby = [upleft, up, upright, left, right, downleft, down, downright]
     return nearby
+
+def directNearbyEnvironment(coordinate):
+    left = [coordinate[0]-UNIT, coordinate[1], coordinate[2]-UNIT, coordinate[3]]
+    right = [coordinate[0]+UNIT, coordinate[1], coordinate[2]+UNIT, coordinate[3]]
+    up = [coordinate[0], coordinate[1]-UNIT, coordinate[2], coordinate[3]-UNIT]
+    down = [coordinate[0], coordinate[1]+UNIT, coordinate[2], coordinate[3]+UNIT]
+    nearby = [up, down, left, right]
+    return nearby
     
 if __name__ == "__main__":
     env = Maze()
-    RL1 = QLearningTable1(actions=list(range(env.n_actions)))
-    RL2 = QLearningTable2(actions=list(range(env.n_actions)))
-    RL3 = QLearningTable3(actions=list(range(env.n_actions)))
-    ReturnRL1 = ReturnQLearningTable1(actions=list(range(env.n_actions)))
-    ReturnRL2 = ReturnQLearningTable2(actions=list(range(env.n_actions)))
-    ReturnRL3 = ReturnQLearningTable3(actions=list(range(env.n_actions)))
-    env.after(3000, update)
+    RL1 = QLearningTable1(actions=list(range(env.n_actions)),state=CHOSENSTATE)
+    RL2 = QLearningTable2(actions=list(range(env.n_actions)),state=CHOSENSTATE)
+    RL3 = QLearningTable3(actions=list(range(env.n_actions)),state=CHOSENSTATE)
+    backupRL1 = QLearningTable1(actions=list(range(env.n_actions)),state=STATE1)
+    backupRL2 = QLearningTable2(actions=list(range(env.n_actions)),state=STATE1)
+    backupRL3 = QLearningTable3(actions=list(range(env.n_actions)),state=STATE1)
+    ReturnRL1 = ReturnQLearningTable1(actions=list(range(env.n_actions)),state=CHOSENSTATE)
+    ReturnRL2 = ReturnQLearningTable2(actions=list(range(env.n_actions)),state=CHOSENSTATE)
+    ReturnRL3 = ReturnQLearningTable3(actions=list(range(env.n_actions)),state=CHOSENSTATE)
+    env.after(300, update)
     env.mainloop()

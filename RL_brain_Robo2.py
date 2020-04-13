@@ -11,16 +11,22 @@ import pandas as pd
 import pickle
 
 class QLearningTable2:
-    def __init__(self, actions, learning_rate=0.2, reward_decay=0.9, e_greedy=0.8):
+    def __init__(self, actions, state):
         self.actions = actions  # a list
-        self.lr = learning_rate
-        self.gamma = reward_decay
-        self.epsilon = e_greedy
-        #f = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/q_table2.txt', 'rb')
-        #self.q_table = pd.DataFrame(columns=self.actions, dtype=np.float64)
-        f = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/path_qtable2.txt', 'rb')
-        self.q_table = pickle.load(f)
-        f.close()
+
+        if state == "RAW": 
+            #The q_table without previous knowledge
+            self.q_table = pd.DataFrame(columns=self.actions, dtype=np.float64)
+        elif state == "MAP":
+            #The q_table after map training
+            f = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/q_table2.txt', 'rb')
+            self.q_table = pickle.load(f)
+            f.close()
+        elif state == "PATH":
+            #The q_table after path training
+            f = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/path_qtable2.txt', 'rb')
+            self.q_table = pickle.load(f)
+            f.close()
 
     def choose_action(self, observation, epsilon):
         self.check_state_exist(observation)
