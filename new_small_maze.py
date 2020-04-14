@@ -250,7 +250,7 @@ class Maze(tk.Tk, object):
               
         return s_, reward, done    
     
-    def step1(self, action):
+    def step1(self, action, obstacle=None):
         s = self.canvas.coords(self.rect1)
         base_action = moveAgent(s, action)
         self.canvas.move(self.rect1, base_action[0], base_action[1])  # move agent
@@ -277,17 +277,22 @@ class Maze(tk.Tk, object):
         else:
             reward = 0
             done = 'nothing'
-              
+        
+        if obstacle != None:
+            if s_ == obstacle:
+                reward = -50
+                done = 'hit'
+                s_ = 'terminal'
+        
         return s_, reward, done
     
-    def step2(self, action):
+    def step2(self, action, obstacle=None):
         s = self.canvas.coords(self.rect2)
         base_action = moveAgent(s, action)
         self.canvas.move(self.rect2, base_action[0], base_action[1])  # move agent
         s_ = self.canvas.coords(self.rect2)  # next state
       
-        # reward function      
-
+        # reward function  
         if s_ == self.canvas.coords(self.target2):
             reward = 50
             done = 'arrive'
@@ -296,7 +301,7 @@ class Maze(tk.Tk, object):
             reward = -50
             done = 'hit'
             s_ = 'terminal'
-        elif s_[0] == 0 or s_[1] < 40 or s_[2] >= MAZE_H * UNIT or s_[3] >= MAZE_W * UNIT:
+        elif s_[0] == 0 or int(s_[1]) < 40 or s_[2] >= MAZE_H * UNIT or s_[3] >= MAZE_W * UNIT:
             reward = -50
             done = 'hit'
             s_ = 'terminal'
@@ -307,10 +312,16 @@ class Maze(tk.Tk, object):
         else:
             reward = 0
             done = 'nothing'
-     
+                
+        if obstacle != None:
+            if s_ == obstacle:
+                reward = -50
+                done = 'hit'
+                s_ = 'terminal'
+
         return s_, reward, done      
 
-    def step3(self, action):
+    def step3(self, action, obstacle=None):
         s = self.canvas.coords(self.rect3)
         base_action = moveAgent(s, action)
         self.canvas.move(self.rect3, base_action[0], base_action[1])  # move agent
@@ -337,6 +348,12 @@ class Maze(tk.Tk, object):
         else:
             reward = 0
             done = 'nothing'
+       
+        if obstacle != None:
+            if s_ == obstacle:
+                reward = -50
+                done = 'hit'
+                s_ = 'terminal'
           
         return s_, reward, done
 

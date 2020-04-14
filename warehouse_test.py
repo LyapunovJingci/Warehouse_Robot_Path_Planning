@@ -21,8 +21,9 @@ UNIT = 20
 STATE0 = "RAW"
 STATE1 = "MAP"
 STATE2 = "PATH"
-CHOSENSTATE = STATE2
+CURRENTSTATE = STATE2
 RECORDDATA = False
+
 
 def update():
     totalReward1 = 0
@@ -32,28 +33,29 @@ def update():
     rewardList2 = []
     rewardList3 = []
     totalRewardList = []
-
+    #check whether the agent is available to move
     freeze1 = False
     freeze2 = False
     freeze3 = False
+    #check whether facing fixed obstacles
+    backup1 = False
+    backup2 = False
+    backup3 = False
     for episode in range(300):
         # initial observation
         observation1, observation2, observation3 = env.resetRobot()
         #nearbyEnvironment(observation1)
         human1, human2 = env.resetHuman()
         humanWalkHelper = 0
-        wait_time = 0
+        wait_time1 = 0
+        wait_time2 = 0
+        wait_time3 = 0
         while True:
             # fresh env
             env.render()
             
-            if humanWalkHelper % 2 == 0:
-                if humanWalkHelper/2 < len(HUMANWALK1):
-                    human1 = env.humanStep1(HUMANWALK1[int(humanWalkHelper/2)])
-                else:
-                    human1 = env.humanStep1(4)
-            else:
-                human1 = env.humanStep1(4)
+            # simulation of human walking
+            human1 = humanWalk(humanWalkHelper)
             humanWalkHelper +=1
 
             # RL choose action based on observation
@@ -61,51 +63,64 @@ def update():
                 action1 = 4
             else:
                 # Choose action
-                action1 = chooseAction(episode, RL1, observation1)   
-                # RL take action and get next observation and reward
-                #directEnvironment = directNearbyEnvironment(observation1)
-                
-                observation1_, reward1, done1 = env.step1(action1)
+                if not backup1:
+                    action1 = chooseAction(episode, RL1, observation1)   
+                    if stateChecking(human1, observation1, action1) == 'no_collision':
+                        observation1_, reward1, done1 = env.step1(action1)
+                    else:
+                        if wait_time1 > 5:
+                            if stateChecking(human1, observation1, action1) == 'upward_collision':
+                                observation1_, reward1, done1 = env.step1(1)
+                            elif stateChecking(human1, observation1, action1) == 'downward_collision':
+                                observation1_, reward1, done1 = env.step1(0)
+                            elif stateChecking(human1, observation1, action1) == 'left_collision':
+                                observation1_, reward1, done1 = env.step1(2)
+                            elif stateChecking(human1, observation1, action1) == 'right_collision':
+                                observation1_, reward1, done1 = env.step1(3)
+                            backup1 = True
+                            wait_time1 = 0
+                        else:
+                            observation1_, reward1, done1 = env.step1(4)
+                            wait_time1 +=1 
+                    learn (episode, RL1, action1, reward1, observation1, observation1_)
+                else:
+                    action1 = chooseAction(episode, backupRL1, observation1)
+                    observation1_, reward1, done1 = env.step1(action1, human1)
+                    learn (episode, backupRL1, action1, reward1, observation1, observation1_)      
+                    
                 totalReward1+=reward1
-                # RL learn from this transition
-                learn (episode, RL1, action1, reward1, observation1, observation1_)
-
-                # swap observation
                 observation1 = observation1_
             
             if freeze2:
                 action2 = 4
-            else:                
+            else:
                 # Choose action
-                action2 = chooseAction(episode, RL2, observation2)        
-                # RL take action and get next observation and reward
-                #------------------------------------
-                
-                directEnvironment2 = directNearbyEnvironment(observation2)
-                if human1 in directEnvironment2:
-                    print('进这儿')
-                    if human1 == directEnvironment2[0] and action2 == 0:
-                        observation2_, reward2, done1 = env.step2(1)
-                    elif human1 == directEnvironment2[1] and action2 == 1:
-                        if wait_time > 5:
-                            observation2_, reward2, done2 = env.step2(4)
+                if not backup2:
+                    action2 = chooseAction(episode, RL2, observation2)   
+                    if stateChecking(human1, observation2, action2) == 'no_collision':
+                        observation2_, reward2, done2 = env.step2(action2)
+                    else:
+                        if wait_time2 > 5:
+                            if stateChecking(human1, observation2, action2) == 'upward_collision':
+                                observation2_, reward2, done2 = env.step2(1)
+                            elif stateChecking(human1, observation2, action2) == 'downward_collision':
+                                observation2_, reward2, done2 = env.step2(0)
+                            elif stateChecking(human1, observation2, action2) == 'left_collision':
+                                observation2_, reward2, done2 = env.step2(2)
+                            elif stateChecking(human1, observation2, action2) == 'right_collision':
+                                observation2_, reward2, done2 = env.step2(3)
+                            backup2 = True
+                            wait_time2 = 0
                         else:
                             observation2_, reward2, done2 = env.step2(4)
-                            wait_time +=1
-                    elif human1 == directEnvironment2[2] and action2 == 3:
-                        observation2_, reward2, done2 = env.step2(2)
-                    elif human1 == directEnvironment2[3] and action2 == 2:
-                        observation2_, reward2, done2 = env.step2(3)
+                            wait_time2 +=1 
+                    learn (episode, RL2, action2, reward2, observation2, observation2_)
                 else:
-                    observation2_, reward2, done2 = env.step2(action2)
-                
-
-                #------------------------------------   
-                
-                #observation2_, reward2, done2 = env.step2(action2)
+                    action2 = chooseAction(episode, backupRL2, observation2)
+                    observation2_, reward2, done2 = env.step2(action2, human1)
+                    learn (episode, backupRL2, action2, reward2, observation2, observation2_)      
+                    
                 totalReward2+=reward2
-                # RL learn from this transition
-                learn (episode, RL2, action2, reward2, observation2, observation2_)
 
                 # swap observation
                 observation2 = observation2_
@@ -270,7 +285,7 @@ def learn (episode, RL, action, reward, observation, observation_):
          RL.learn(str(observation), action, reward, str(observation_), 0.3-0.0002*(episode-500), 0.9)
      else:
          RL.learn(str(observation), action, reward, str(observation_), 0.001, 0.9)
- 
+
 def plot(reward):
     plt.style.use('seaborn-deep')
     plt.plot(reward,linewidth= 0.3)
@@ -278,17 +293,26 @@ def plot(reward):
     plt.xlabel('Trial')
     plt.ylabel('Reward')
     plt.show() 
+    
+def stateChecking(human, observation, action):
+    directEnvironment = directNearbyEnvironment(observation)
+    if human == directEnvironment[0] and action == 0:
+        return 'upward_collision'
+    elif human == directEnvironment[1] and action == 1:
+        return 'downward_collision'
+    elif human == directEnvironment[2] and action == 3:
+        return 'left_collision'
+    elif human == directEnvironment[3] and action == 2:
+        return 'right_collision'
+    else:
+        return 'no_collision'
 
-def nearbyEnvironment(coordinate):
-    left = [coordinate[0]-UNIT, coordinate[1], coordinate[2]-UNIT, coordinate[3]]
-    right = [coordinate[0]+UNIT, coordinate[1], coordinate[2]+UNIT, coordinate[3]]
-    up = [coordinate[0], coordinate[1]-UNIT, coordinate[2], coordinate[3]-UNIT]
-    down = [coordinate[0], coordinate[1]+UNIT, coordinate[2], coordinate[3]+UNIT]
+def indirectNearbyEnvironment(coordinate):
     upleft = [coordinate[0]-UNIT, coordinate[1]-UNIT, coordinate[2]-UNIT, coordinate[3]-UNIT]
     upright = [coordinate[0]+UNIT, coordinate[1]-UNIT, coordinate[2]+UNIT, coordinate[3]-UNIT]
     downleft = [coordinate[0]-UNIT, coordinate[1]+UNIT, coordinate[2]-UNIT, coordinate[3]+UNIT]
     downright = [coordinate[0]+UNIT, coordinate[1]+UNIT, coordinate[2]+UNIT, coordinate[3]+UNIT]
-    nearby = [upleft, up, upright, left, right, downleft, down, downright]
+    nearby = [upleft, upright, downleft, downright]
     return nearby
 
 def directNearbyEnvironment(coordinate):
@@ -298,17 +322,27 @@ def directNearbyEnvironment(coordinate):
     down = [coordinate[0], coordinate[1]+UNIT, coordinate[2], coordinate[3]+UNIT]
     nearby = [up, down, left, right]
     return nearby
+
+def humanWalk(humanWalkHelper):
+    if humanWalkHelper % 2 == 0:
+        if humanWalkHelper/2 < len(HUMANWALK1):
+            human = env.humanStep1(HUMANWALK1[int(humanWalkHelper/2)])
+        else:
+            human = env.humanStep1(4)
+    else:
+        human = env.humanStep1(4)
+    return human
     
 if __name__ == "__main__":
     env = Maze()
-    RL1 = QLearningTable1(actions=list(range(env.n_actions)),state=CHOSENSTATE)
-    RL2 = QLearningTable2(actions=list(range(env.n_actions)),state=CHOSENSTATE)
-    RL3 = QLearningTable3(actions=list(range(env.n_actions)),state=CHOSENSTATE)
+    RL1 = QLearningTable1(actions=list(range(env.n_actions)),state=CURRENTSTATE)
+    RL2 = QLearningTable2(actions=list(range(env.n_actions)),state=CURRENTSTATE)
+    RL3 = QLearningTable3(actions=list(range(env.n_actions)),state=CURRENTSTATE)
     backupRL1 = QLearningTable1(actions=list(range(env.n_actions)),state=STATE1)
     backupRL2 = QLearningTable2(actions=list(range(env.n_actions)),state=STATE1)
     backupRL3 = QLearningTable3(actions=list(range(env.n_actions)),state=STATE1)
-    ReturnRL1 = ReturnQLearningTable1(actions=list(range(env.n_actions)),state=CHOSENSTATE)
-    ReturnRL2 = ReturnQLearningTable2(actions=list(range(env.n_actions)),state=CHOSENSTATE)
-    ReturnRL3 = ReturnQLearningTable3(actions=list(range(env.n_actions)),state=CHOSENSTATE)
+    ReturnRL1 = ReturnQLearningTable1(actions=list(range(env.n_actions)),state=CURRENTSTATE)
+    ReturnRL2 = ReturnQLearningTable2(actions=list(range(env.n_actions)),state=CURRENTSTATE)
+    ReturnRL3 = ReturnQLearningTable3(actions=list(range(env.n_actions)),state=CURRENTSTATE)
     env.after(300, update)
     env.mainloop()
