@@ -132,12 +132,17 @@ def update():
                 action3 = chooseAction(episode, RL3, observation3) 
                 collisionType = ['upward_collision','downward_collision','left_collision','right_collision']
                 # RL take action and get next observation and reward         
-                if stateChecking(observation1, observation3, action3) == 'no_collision':
-                    observation3_, reward3, done3 = env.step3(action3)   
-                elif (stateChecking(observation1, observation3, action3) in collisionType):
+                if (stateChecking(observation1, observation3, action3) == 'no_collision'
+                    and stateChecking(observation2, observation3, action3) == 'no_collision'):
+                    observation3_, reward3, done3 = env.step3(action3) 
+                    wait_time3 = 0
+                elif (stateChecking(observation1, observation3, action3) in collisionType
+                    or stateChecking(observation1, observation3, action3) in collisionType):
                     observation3_, reward3, done3 = env.step3(4)
+                    wait_time3 += 1
                 else:
                     observation3_, reward3, done3 = env.step3(action3)
+                    wait_time3 = 0
                     
                 totalReward3+=reward3
                 # RL learn from this transition
@@ -150,7 +155,6 @@ def update():
                 
             if (done1 == 'hit' or done1 == 'arrive') and (done2 == 'hit' or done2 == 'arrive') and (done3 == 'hit' or done3 == 'arrive'):
                 print (episode, 'trial: ','Robot1: ', totalReward1, '; Robot2: ', totalReward2, '; Robot3: ', totalReward3)
-                #print (freeze1, freeze2, freeze3)
                 rewardList1.append(totalReward1)
                 rewardList2.append(totalReward2)
                 rewardList3.append(totalReward3)
@@ -265,16 +269,18 @@ def plot(reward):
     plt.ylabel('Reward')
     plt.show() 
     
-def stateChecking(human, observation, action):
-    directEnvironment = directNearbyEnvironment(observation)
-    if human == directEnvironment[0] and action == 0:
-        return 'upward_collision'
-    elif human == directEnvironment[1] and action == 1:
-        return 'downward_collision'
-    elif human == directEnvironment[2] and action == 3:
-        return 'left_collision'
-    elif human == directEnvironment[3] and action == 2:
-        return 'right_collision'
+def stateChecking(alien_agent, key_agent, action):
+    directEnvironment = directNearbyEnvironment(key_agent)
+
+    indirectEnvironment = indirectNearbyEnvironment(key_agent)
+    if action == 0 and (alien_agent in [directEnvironment[0], indirectEnvironment[0], indirectEnvironment[1]]):
+            return 'upward_collision'
+    elif action == 1 and (alien_agent in [directEnvironment[1], indirectEnvironment[2], indirectEnvironment[3]]):
+            return 'downward_collision'
+    elif action == 2 and (alien_agent in [directEnvironment[3], indirectEnvironment[1], indirectEnvironment[3]]):
+            return 'right_collision'
+    elif action == 3 and (alien_agent in [directEnvironment[2], indirectEnvironment[0], indirectEnvironment[2]]):
+            return 'left_collision'
     else:
         return 'no_collision'
 
