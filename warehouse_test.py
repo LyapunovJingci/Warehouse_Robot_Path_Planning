@@ -130,44 +130,15 @@ def update():
             else:
                 # Choose action
                 action3 = chooseAction(episode, RL3, observation3) 
+                collisionType = ['upward_collision','downward_collision','left_collision','right_collision']
                 # RL take action and get next observation and reward         
-                #---------------------------------------------
-                '''
-                directEnvironment = directNearbyEnvironment(observation3)
-                if observation1 in directEnvironment or observation2 in directEnvironment:
-                    print("进来了")
-                    if observation2 == directEnvironment[0] or observation1 == directEnvironment[0]:
-                        if action3 == 0:
-                            observation3_, reward3, done3 = env.step3(1)
-                        else:
-                            observation3_, reward3, done3 = env.step3(action3)
-                    elif observation2 == directEnvironment[1] or observation1 == directEnvironment[1]:
-                        if action3 == 1:
-                            observation3_, reward3, done3 = env.step3(0)
-                        else:
-                            observation3_, reward3, done3 = env.step3(action3)
-                    elif observation2 == directEnvironment[2] or observation1 == directEnvironment[2]:
-                        print("又进来了")
-                        print(action3)
-                        if action3 == 3:
-                            observation3_, reward3, done3 = env.step3(4)
-                        else:
-                            observation3_, reward3, done3 = env.step3(action3)
-                    elif observation2 == directEnvironment[3] or observation1 == directEnvironment[3]:
-                        print("又进来了")
-                        print(action1)
-                        if action3 == 2:
-                            observation3_, reward3, done3 = env.step3(4)
-                        else:
-                            observation3_, reward3, done3 = env.step3(action3)
+                if stateChecking(observation1, observation3, action3) == 'no_collision':
+                    observation3_, reward3, done3 = env.step3(action3)   
+                elif (stateChecking(observation1, observation3, action3) in collisionType):
+                    observation3_, reward3, done3 = env.step3(4)
                 else:
                     observation3_, reward3, done3 = env.step3(action3)
-                
-                
-                
-                '''
-                #---------------------------------------------
-                observation3_, reward3, done3 = env.step3(action3)
+                    
                 totalReward3+=reward3
                 # RL learn from this transition
                 learn (episode, RL3, action3, reward3, observation3, observation3_)
