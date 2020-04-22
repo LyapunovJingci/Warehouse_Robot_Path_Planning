@@ -26,4 +26,4 @@ Afterward, the system could converge within 50 episodes.
 ## Process Flow Chart
 ![](ProcessFlow.png)
 ## Simulation
-![](Target.gif)
+![](Target.gif| width=100)
