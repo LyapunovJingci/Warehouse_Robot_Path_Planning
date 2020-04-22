@@ -37,7 +37,7 @@ Afterward, the system could converge within 50 episodes.
   3. Comparing Manhattan distances towards the targets: the agent with shorter Manhattan distance should be endowed right of way
   4. Restarting moving in proper order
 
-* Robots vs. Human Workers
+* Robots vs. Human Workers or Forklifts
   1. Collision detection
   2. Waiting for human workers to walk through (wait time < 5s)
   3. Restart moving
