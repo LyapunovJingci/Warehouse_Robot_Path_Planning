@@ -32,6 +32,10 @@ Afterward, the system could converge within 50 episodes.
 **Dynamic Obstacle**
 
 * Robots vs. Robots
+  1. Collision detection
+  2. Waiting and starting coordination
+  3. Comparing Manhattan distances towards the targets: the agent with shorter Manhattan distance should be endowed right of way
+  4. Restarting moving in proper order
 
 * Robots vs. Human Workers
 
