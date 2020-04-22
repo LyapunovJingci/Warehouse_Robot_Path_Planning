@@ -27,6 +27,7 @@ Before transfer learning, the system is likely to converge after 2500 episodes.
 Afterward, the system could converge within 50 episodes.
 ## Process Flow Chart
 ![](ProcessFlow.png)
+## Collision Avoidance
 ## Simulation
 
 <img src="Target.gif" width="50%">
