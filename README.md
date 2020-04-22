@@ -1,4 +1,4 @@
-# WarehouseRobotPathPlanning
+# Multi-Agent Path Planning and Collision Avoidance in Warehouse System
 ## Target
 The target of this project is to provide a multi-robot path planning solution under a warehouse scenario using q learning. The robots should successfully arrive the storage target without hitting obstacles. Robots would start picking boxes from the operation desks, and after storage, they would return and start a new round of task.
 
