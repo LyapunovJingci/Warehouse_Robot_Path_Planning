@@ -19,7 +19,7 @@ After the prior two steps, robots should learn enough knowledge of the surroundi
 
 The transfer learning idea tremendously accelerate the training process. One more advantage is that, in the future, if new robot agents shall be added into this system, there is no need for them to start training from the sketch. The information from the first two steps would be inherited. In other word, this system is extendable. One before and after comparison of transfer learning is shown below:
 
-![](ConvergeRateComparison.png)
+![](ConvergeRateComparison.png | width=500)
 
 Before transfer learning, the system is likely to converge after 2500 episodes.
 Afterward, the system could converge within 50 episodes.
