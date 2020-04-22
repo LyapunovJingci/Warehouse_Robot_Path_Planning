@@ -38,12 +38,17 @@ Afterward, the system could converge within 50 episodes.
   4. Restarting moving in proper order
 
 * Robots vs. Human Workers
+  1. Collision detection
+  2. Waiting for human workers to walk through (wait time < 5s)
+  3. Restart moving
 
 **Static Obstacle**
 
 * Intended Obstacles
+  * If one obstacle is intended to put into the warehouse environment. I assume that the position of the obstacle should be broadcast to all the robot agents (RFID, indoor GPS, etc.). The position of the obstacles should be taken into consideration in the third step of training to avoid waste of computing. 
 
 * Temporary Obstacles
+  * If one robot agent detects an obstacle, and waits there for more than 5 seconds. The agent would automatically walk back one step (if no obstacle in the back) and restart path planning process. (Shown on flow chart)
 ## Simulation
 
 <img src="Target.gif" width="50%">
