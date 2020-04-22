@@ -28,6 +28,17 @@ Afterward, the system could converge within 50 episodes.
 ## Process Flow Chart
 ![](ProcessFlow.png)
 ## Collision Avoidance
+
+**Dynamic Obstacle**
+
+* Robots vs. Robots
+
+* Robots vs. Human Workers
+**Static Obstacle**
+
+* Intended Obstacles
+
+* Temporary Obstacles
 ## Simulation
 
 <img src="Target.gif" width="50%">
