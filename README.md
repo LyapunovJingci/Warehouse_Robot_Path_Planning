@@ -34,6 +34,7 @@ Afterward, the system could converge within 50 episodes.
 * Robots vs. Robots
 
 * Robots vs. Human Workers
+
 **Static Obstacle**
 
 * Intended Obstacles
