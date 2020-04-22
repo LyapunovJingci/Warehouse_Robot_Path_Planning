@@ -27,5 +27,5 @@ Afterward, the system could converge within 50 episodes.
 ![](ProcessFlow.png)
 ## Simulation
 
-<img src="Target.gif" width="40%">
-![](Target.gif | width="100")
+<img src="Target.gif" width="50%">
+
