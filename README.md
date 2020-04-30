@@ -36,6 +36,9 @@ Afterward, the system could converge within 50 episodes.
   2. Waiting and starting coordination
   3. Comparing Manhattan distances towards the targets: the agent with shorter Manhattan distance should be endowed right of way
   4. Restarting moving in proper order
+  
+  (In this warehouse scenario, the Manhattan distance equals to the number of steps a robot would perform. So it is more intuitive to use Manhattan distance as the comparing criterion. If the robot could move in 8 directions (original 4 directions and diagonal movement), Chebyshev distance should be more appropriate to apply.) 
+
 
 * Robots vs. Human Workers or Forklifts
   1. Collision detection
