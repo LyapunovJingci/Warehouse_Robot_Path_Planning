@@ -56,3 +56,23 @@ Afterward, the system could converge within 50 episodes.
 
 <img src="Target.gif" width="50%">
 
+## Reference
+[1] Choset, H., Lynch, K. M., & Hutchinson, S. (2005). Principles of robot motion: theory, algoritms, and implementations. Cambridge, MA: Bradford.
+
+[2] Bertsekas, D. P. (2012). Dynamic programming and optimal control. Belmont, Mass: Athena Scientific. 
+
+[3] Wang, Y.-C., & Usher, J. M. (2006). A reinforcement learning approach for developing routing policies in multi-agent production scheduling. The International Journal of Advanced Manufacturing Technology, 33(3-4), 323–333. doi: 10.1007/s00170-006-0465-y 
+
+[4] Chen, C., Li, H.-X., & Dong, D. (2008). Hybrid Control for Robot Navigation - A Hierarchical Q-Learning Algorithm. IEEE Robotics & Automation Magazine, 15(2), 37–47. doi: 10.1109/mra.2008.921541 
+
+[5] Dou, J., Chen, C., & Yang, P. (2015). Genetic Scheduling and Reinforcement Learning in Multirobot Systems for Intelligent Warehouses. Mathematical Problems in Engineering, 2015, 1–10. doi: 10.1155/2015/597956
+
+[6] Panov, A. I., Yakovlev, K. S., & Suvorov, R. (2018). Grid Path Planning with Deep Reinforcement Learning: Preliminary Results. Procedia Computer Science, 123, 347–353. doi: 10.1016/j.procs.2018.01.054 
+
+[7] Kamoshida, R., & Kazama, Y. (2017). Acquisition of Automated Guided Vehicle Route Planning Policy Using Deep Reinforcement Learning. 2017 6th IEEE International Conference on Advanced Logistics and Transport (ICALT). doi: 10.1109/icadlt.2017.8547000 
+
+[8] Gupta, A., Devin, C., Liu, Y., Abbeel, P., & Levine, S. (2017). Learning Invariant Feature Spaces to Transfer Skills with Reinforcement Learning.
+
+[9] Sutton, R. S., & Barto, A. (2018). Reinforcement learning: an introduction. Cambridge, MA: The MIT Press. 
+
+[10] Taylor, M. (2009). Transfer in Reinforcement Learning Domains (Studies in Computational Intelligence, 216). Berlin, Heidelberg: Springer Berlin Heidelberg.
