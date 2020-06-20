@@ -56,6 +56,11 @@ Afterward, the system could converge within 50 episodes.
 
 <img src="image/Target.gif" width="50%">
 
+## How to run the code
+
+1. Please modify line 45 of warehouse_test.py and line 17 of RLBrain.py to local file path
+2. Run file warehouse_test.py
+
 ## Reference
 [1] Choset, H., Lynch, K. M., & Hutchinson, S. (2005). Principles of robot motion: theory, algoritms, and implementations. Cambridge, MA: Bradford.
 
