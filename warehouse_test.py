@@ -15,14 +15,34 @@ from returnBrain2 import ReturnQLearningTable2
 from returnBrain3 import ReturnQLearningTable3
 import matplotlib.pyplot as plt
 import pickle
-#HUMANWALK1 = [2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+'''
+Add the possible human walking path here 
+UP: 0
+DOWN: 1
+RIGHT: 2
+LEFT: 3
+WAIT: 4
+'''
 HUMANWALK1 = [4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4]
 UNIT = 20
 STATE0 = "RAW"
 STATE1 = "MAP"
 STATE2 = "PATH"
+'''
+Define the current state here
+Different states relate to different pre-trained q table
+'''
 CURRENTSTATE = STATE2
+'''
+True, if using the data of this trial for future training
+False, if just testing
+'''
 RECORDDATA = False
+
+'''
+Before running the code, please modify this file path as needed
+'''
+FILEPATH = "/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/"
 
 
 def update():
@@ -185,35 +205,23 @@ def update():
                 freeze3 = True
        
         # Train the map and dump into pickle
-        '''
-        if episode == 2500:     
-            f1 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/Return_q_table1.txt', 'wb')
-            pickle.dump(RL1.q_table,f1)
-            f1.close()
-            f2 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/Return_table2.txt', 'wb')
-            pickle.dump(RL2.q_table,f2)
-            f2.close()
-            f3 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/Return_table3.txt', 'wb')
-            pickle.dump(RL3.q_table,f3)
-            f3.close()
-        '''
     if RECORDDATA:
-        f1 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/Return_qtable1.txt', 'wb')
+        f1 = open(FILEPATH + 'Return_qtable1.txt', 'wb');
         pickle.dump(ReturnRL1.q_table,f1)
         f1.close()
-        f2 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/Return_qtable2.txt', 'wb')
+        f2 = open(FILEPATH + 'Return_qtable2.txt', 'wb');
         pickle.dump(ReturnRL2.q_table,f2)
         f2.close()
-        f3 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/Return_qtable3.txt', 'wb')
+        f3 = open(FILEPATH + 'Return_qtable3.txt', 'wb');
         pickle.dump(ReturnRL3.q_table,f3)
         f3.close()
-        f4 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/path_qtable1.txt', 'wb')
+        f4 = open(FILEPATH + 'path_qtable1.txt', 'wb');
         pickle.dump(RL1.q_table,f4)
         f4.close()
-        f5 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/path_qtable2.txt', 'wb')
+        f5 = open(FILEPATH + 'path_qtable2.txt', 'wb');
         pickle.dump(RL2.q_table,f5)
         f5.close()
-        f6 = open('/Users/jingci/Desktop/RL/warehouseTest/WarehouseRobotPathPlanning-master/path_qtable3.txt', 'wb')
+        f6 = open(FILEPATH + 'path_qtable3.txt', 'wb');
         pickle.dump(RL3.q_table,f6)
         f6.close()
 
