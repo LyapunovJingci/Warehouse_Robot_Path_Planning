@@ -360,7 +360,7 @@ class Maze(tk.Tk, object):
     def render(self):
         time.sleep(0.01)
         self.update()
-        
+
     
 def moveAgent(s, action):
     base_action = np.array([0, 0])

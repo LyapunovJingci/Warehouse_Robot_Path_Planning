@@ -7,12 +7,19 @@ Created on Tue Mar 31 21:14:11 2020
 """
 
 from new_small_maze import Maze
-from RL_brain_Robo1 import QLearningTable1
-from RL_brain_Robo2 import QLearningTable2
-from RL_brain_Robo3 import QLearningTable3
-from returnBrain1 import ReturnQLearningTable1
-from returnBrain2 import ReturnQLearningTable2
-from returnBrain3 import ReturnQLearningTable3
+# from RL_brain_Robo1 import QLearningTable1
+# from RL_brain_Robo2 import QLearningTable2
+# from RL_brain_Robo3 import QLearningTable3
+# from returnBrain1 import ReturnQLearningTable1
+# from returnBrain2 import ReturnQLearningTable2
+# from returnBrain3 import ReturnQLearningTable3
+from QTables import QLearningTable1
+from QTables import QLearningTable2
+from QTables import QLearningTable3
+from QTables import ReturnQLearningTable1
+from QTables import ReturnQLearningTable2
+from QTables import ReturnQLearningTable3
+
 import matplotlib.pyplot as plt
 import pickle
 '''
