@@ -2,7 +2,7 @@
 ## Target
 The target of this project is to provide a multi-robot path planning solution under a warehouse scenario using q learning. The robots should successfully arrive the storage target without hitting obstacles. Robots would start picking boxes from the operation desks, and after storage, they would return and start a new round of task.
 
-<img src="WarehouseSimulation.png" width="50%">
+<img src="image/WarehouseSimulation.png" width="50%">
 
 ## Approach
 Q learning was mainly used for path planning. The idea is fairly easy. Without knowing any information of the environment, the robots would automatically explore the map. If one robot agent arrives the target, it would be rewarded 50 points. On the contrary, if it hits any obstacles, it would be punished by 50 points. In order to accelerate the training process, the idea of transfer learning was implied. Basically, the entire path planning task was divided into a hierarchy of  three subtasks. 
@@ -21,12 +21,12 @@ After the prior two steps, robots should learn enough knowledge of the surroundi
 
 The transfer learning idea tremendously accelerate the training process. One more advantage is that, in the future, if new robot agents shall be added into this system, there is no need for them to start training from the sketch. The information from the first two steps would be inherited. In other word, this system is extendable. One before and after comparison of transfer learning is shown below:
 
-<img src="ConvergeRateComparison.png" width="50%">
+<img src="image/ConvergeRateComparison.png" width="50%">
 
 Before transfer learning, the system is likely to converge after 2500 episodes.
 Afterward, the system could converge within 50 episodes.
 ## Process Flow Chart
-![](WorkflowWarehouse.png)
+![](image/WorkflowWarehouse.png)
 ## Collision Avoidance
 
 **Dynamic Obstacle**
@@ -54,7 +54,7 @@ Afterward, the system could converge within 50 episodes.
   * If one robot agent detects an obstacle, and waits there for more than 5 seconds. The agent would automatically walk back one step (if no obstacle in the back) and restart path planning process. (Shown on flow chart)
 ## Simulation
 
-<img src="Target.gif" width="50%">
+<img src="image/Target.gif" width="50%">
 
 ## Reference
 [1] Choset, H., Lynch, K. M., & Hutchinson, S. (2005). Principles of robot motion: theory, algoritms, and implementations. Cambridge, MA: Bradford.
