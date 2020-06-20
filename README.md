@@ -76,3 +76,6 @@ Afterward, the system could converge within 50 episodes.
 [9] Sutton, R. S., & Barto, A. (2018). Reinforcement learning: an introduction. Cambridge, MA: The MIT Press. 
 
 [10] Taylor, M. (2009). Transfer in Reinforcement Learning Domains (Studies in Computational Intelligence, 216). Berlin, Heidelberg: Springer Berlin Heidelberg.
+
+## License
+[license]
