@@ -7,12 +7,12 @@ Created on Tue Mar 31 21:14:11 2020
 """
 
 from new_small_maze import Maze
-from RL_brain_Robo1 import QLearningTable1
-from RL_brain_Robo2 import QLearningTable2
-from RL_brain_Robo3 import QLearningTable3
-from returnBrain1 import ReturnQLearningTable1
-from returnBrain2 import ReturnQLearningTable2
-from returnBrain3 import ReturnQLearningTable3
+from QTables import QLearningTable1
+from QTables import QLearningTable2
+from QTables import QLearningTable3
+from QTables import ReturnQLearningTable1
+from QTables import ReturnQLearningTable2
+from QTables import ReturnQLearningTable3
 import matplotlib.pyplot as plt
 import pickle
 '''
@@ -23,7 +23,7 @@ RIGHT: 2
 LEFT: 3
 WAIT: 4
 '''
-HUMANWALK1 = [4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4]
+HUMANWALK1 = [4,4,4,4,4,4,4,4]
 UNIT = 20
 STATE0 = "RAW"
 STATE1 = "MAP"
@@ -89,14 +89,8 @@ def update():
                         observation1_, reward1, done1 = env.step1(action1)
                     else:
                         if wait_time1 > 5:
-                            if stateChecking(human1, observation1, action1) == 'upward_collision':
-                                observation1_, reward1, done1 = env.step1(1)
-                            elif stateChecking(human1, observation1, action1) == 'downward_collision':
-                                observation1_, reward1, done1 = env.step1(0)
-                            elif stateChecking(human1, observation1, action1) == 'left_collision':
-                                observation1_, reward1, done1 = env.step1(2)
-                            elif stateChecking(human1, observation1, action1) == 'right_collision':
-                                observation1_, reward1, done1 = env.step1(3)
+                            chooseActionForRobots(stateChecking(human1, observation1, action1), 
+                                         observation1_, reward1, done1, "robot1")
                             backup1 = True
                             wait_time1 = 0
                         else:
@@ -121,14 +115,8 @@ def update():
                         observation2_, reward2, done2 = env.step2(action2)
                     else:
                         if wait_time2 > 5:
-                            if stateChecking(human1, observation2, action2) == 'upward_collision':
-                                observation2_, reward2, done2 = env.step2(1)
-                            elif stateChecking(human1, observation2, action2) == 'downward_collision':
-                                observation2_, reward2, done2 = env.step2(0)
-                            elif stateChecking(human1, observation2, action2) == 'left_collision':
-                                observation2_, reward2, done2 = env.step2(2)
-                            elif stateChecking(human1, observation2, action2) == 'right_collision':
-                                observation2_, reward2, done2 = env.step2(3)
+                            chooseActionForRobots(stateChecking(human1, observation2, action2), 
+                                          observation2_, reward2, done2, "robot2")
                             backup2 = True
                             wait_time2 = 0
                         else:
@@ -251,6 +239,38 @@ def startReturnTable (episode, observation, RL, robotNumber):
         if done == 'arrive' or done == 'hit':
             break
     return done
+
+def chooseActionForRobots(state, observation, reward, done, robot):
+
+    if (robot == "robot1"):
+        if state == 'upward_collision':
+            observation, reward, done = env.step1(1)
+        elif state == 'downward_collision':
+            observation, reward, done = env.step1(0)
+        elif state == 'left_collision':
+            observation, reward, done = env.step1(2)
+        elif state == 'right_collision':
+            observation, reward, done = env.step1(3)  
+
+    if (robot == "robot2"):
+        if state == 'upward_collision':
+            observation, reward, done = env.step2(1)
+        elif state == 'downward_collision':
+            observation, reward, done = env.step2(0)
+        elif state == 'left_collision':
+            observation, reward, done = env.step2(2)
+        elif state == 'right_collision':
+            observation, reward, done = env.step2(3)  
+
+    if (robot == "robot3"):
+        if state == 'upward_collision':
+            observation, reward, done = env.step3(1)
+        elif state == 'downward_collision':
+            observation, reward, done = env.step3(0)
+        elif state == 'left_collision':
+            observation, reward, done = env.step3(2)
+        elif state == 'right_collision':
+            observation, reward, done = env.step3(3)  
 
 def chooseNoRandomAction(RL, observation):
     return RL.choose_action(str(observation),1)
